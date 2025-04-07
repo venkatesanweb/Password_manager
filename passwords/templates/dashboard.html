@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Password Manager</title>
+    <style>
+        /* General Page Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        .container {
+            width: 80%;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h2, h3 {
+            text-align: center;
+            color: #333;
+        }
+
+        /* Form Section */
+        .form-section {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Table for Saved Passwords */
+        .table-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            max-width: 600px;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        td a {
+            color: red;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        td a:hover {
+            text-decoration: underline;
+        }
+
+        /* Logout Button */
+        .logout-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .logout-btn {
+            background-color: #ff4500;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .logout-btn:hover {
+            background-color: #c03400;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Dashboard</h2>
+
+        <!-- Form Section -->
+        <div class="form-section">
+            <form method="POST">
+                {% csrf_token %}
+                <input type="text" name="app_name" placeholder="App Name" required>
+                <input type="password" name="password" placeholder="App Password" required>
+                <button type="submit">Save</button>
+            </form>
+        </div>
+
+        <!-- Saved Passwords Table -->
+        <h3>Saved Passwords</h3>
+        <div class="table-container">
+            <table>
+                <tr>
+                    <th>App Name</th>
+                    <th>Password</th>
+                    <th>Action</th>
+                </tr>
+                {% for entry in passwords %}
+                <tr>
+                    <td>{{ entry.app_name }}</td>
+                    <td>{{ entry.decrypted_password }}</td>
+                    <td><a href="{% url 'delete_password' entry.id %}">Delete</a></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <!-- Logout Button -->
+        <div class="logout-container">
+            <a class="logout-btn" href="{% url 'logout' %}">Logout</a>
+        </div>
+    </div>
+
+</body>
+</html>
